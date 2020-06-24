@@ -37,11 +37,11 @@ app.use(mw.CORS);
 app.get("/send-test-email", async (req, res) => {
   try {
     await mail.sendTestEmail();
-    console.log("Email sent");
+    console.log("Email sent!");
     res.json("Email sent!!");
   } catch (err) {
     console.log("ERROR:", err);
-    res.json("Some fuckup happened :(");
+    res.json("Sorry, some fuckup happened :(");
   }
 });
 
