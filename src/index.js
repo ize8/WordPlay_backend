@@ -2,13 +2,13 @@ const nanoid = require("nanoid");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-var crypto = require("crypto");
 var morgan = require("morgan");
 
 const mw = require("./Middlewares");
 const models = require("./Database/Models.js");
 const mail = require("./Email");
 const userHandlers = require("./Handlers/user.js");
+const wordListHandlers = require("./Handlers/wordlist.js");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -23,7 +23,7 @@ const options = {
     }
   },
   // List of files to be processes. You can also set globs './routes/*.js'
-  apis: ["./src/index.js", "./src/Handlers/user.js"]
+  apis: ["./src/index.js", "./src/Handlers/*.js"]
 };
 
 const specs = swaggerJsdoc(options);
@@ -35,6 +35,7 @@ app.use(morgan("short"));
 app.use(mw.CORS);
 
 app.use("/", userHandlers);
+app.use("/", wordListHandlers);
 
 app.get("/send-test-email", async (req, res) => {
   try {
@@ -77,25 +78,6 @@ app.get("/validate-email", async (req, res) => {
     ).exec();
     res.status(200).json({ message: "Email validated!" });
   }
-});
-
-/**
- * @swagger
- * /get-all-wordlist:
- *    post:
- *      description: returns all WordLists for the user coded in the token
- *    parameters:
- *       - name: token
- *         required: true
- *         type: string
- *         in: body
- *         description: user token
- */
-app.post("/get-all-wordlist", mw.checkToken, async (req, res) => {
-  const userId = req.auth.id;
-  const db = models.getMongooseConnection();
-  const result = await models.WordList.find({ viewers: userId }).exec();
-  res.json(result);
 });
 
 /**
