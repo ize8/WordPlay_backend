@@ -92,6 +92,7 @@ app.get("/validate-email", async (req, res) => {
  *         description: user token
  */
 app.post("/refresh-token", mw.checkToken, async (req, res) => {
+  models.getMongooseConnection();
   const user = await models.User.findOne({ _id: req.auth.id }).exec();
   if (!user) {
     res.json({ error: "User not registered!", user: req.auth });
