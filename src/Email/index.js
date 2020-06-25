@@ -1,8 +1,6 @@
-const mailgun = require("mailgun-js");
-
-const mg = mailgun({
+const mailgun = require("mailgun-js")({
   apiKey: process.env.MAILGUN_API_KEY,
-  domain: process.env.MAILGUN_DOMAIN
+  domain: "mg.wordplay.donotpanic.cc"
 });
 
 exports.sendTestEmail = () => {
@@ -13,7 +11,7 @@ exports.sendTestEmail = () => {
     text: "Testing some Mailgun awesomness!"
   };
   return new Promise((resolve, reject) => {
-    mg.messages().send(data, function(error, body) {
+    mailgun.messages().send(data, function(error, body) {
       console.log("error:", error);
       console.log("body:", body);
       if (error) reject(error);
