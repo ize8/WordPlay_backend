@@ -1,8 +1,7 @@
-const nanoid = require("nanoid");
-
 const express = require("express");
 const bodyParser = require("body-parser");
 var morgan = require("morgan");
+var jwt = require("jsonwebtoken");
 
 const mw = require("./Middlewares");
 const models = require("./Database/Models.js");
@@ -82,9 +81,9 @@ app.get("/validate-email", async (req, res) => {
 
 /**
  * @swagger
- * /validate-token:
+ * /refresh-token:
  *    post:
- *      description: validates token and returns user data
+ *      description: validates token and returns refreshed user data
  *    parameters:
  *       - name: token
  *         required: true
@@ -92,9 +91,24 @@ app.get("/validate-email", async (req, res) => {
  *         in: body
  *         description: user token
  */
-app.post("/validate-token", mw.checkToken, async (req, res) => {
+app.post("/refresh-token", mw.checkToken, async (req, res) => {
+  const user = await models.User.findOne({ _id: req.auth.id }).exec();
+  if (!user) {
+    res.json({ error: "User not registered!", user: req.auth });
+    return;
+  }
+  const returnUser = {
+    id: user._id,
+    email: user.email,
+    validated: user.validated,
+    name: user.name,
+    lastLogin: user.last_login,
+    created: user.created
+  };
+  const token = jwt.sign(returnUser, process.env.JWT_SECRET);
   res.json({
-    user: req.auth
+    user: returnUser,
+    token: token
   });
 });
 

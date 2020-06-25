@@ -45,7 +45,8 @@ router.post("/login-user", async (req, res) => {
     email: user.email,
     validated: user.validated,
     name: user.name,
-    lastLogin: user.last_login
+    lastLogin: user.last_login,
+    created: user.created
   };
   const token = jwt.sign(returnUser, process.env.JWT_SECRET);
   res.json({
