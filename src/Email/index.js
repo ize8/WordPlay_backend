@@ -4,7 +4,8 @@ const mailgun = require("mailgun-js")({
   host: "api.eu.mailgun.net"
 });
 
-exports.sendVerificationEmail = user => {
+exports.sendVerificationEmail = (user, uri) => {
+  console.log("USER DATA:", user.name, user.validation_code);
   const data = {
     from: "WordPlay App <donot-reply@mg.wordplay.donotpanic.cc>",
     to: "zavori.laszlo@gmail.com",
@@ -14,9 +15,7 @@ exports.sendVerificationEmail = user => {
     template: "validate-email",
     "h:X-Mailgun-Variables": JSON.stringify({
       name: user.name,
-      link: `https://word-play-1.herokuapp.com/validate-email?code=${
-        user.validation_code
-      }`
+      link: `${uri}?code=${user.validation_code}`
     })
   };
   return new Promise((resolve, reject) => {

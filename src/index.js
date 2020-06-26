@@ -39,13 +39,14 @@ app.use("/", wordListHandlers);
 app.post("/send-validation-email", async (req, res) => {
   const db = models.getMongooseConnection();
   const email = req.body.email;
+  const uri = req.body.uri;
   try {
-    const user = models.User.findOne({ email: email });
+    const user = await models.User.findOne({ email: email }).exec();
     if (!user) {
       res.json("Email not registered!");
       return;
     }
-    const result = await mail.sendVerificationEmail(user);
+    const result = await mail.sendVerificationEmail(user, uri);
     console.log("Email sent!", result);
     res.json(result);
   } catch (err) {
