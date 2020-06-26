@@ -36,9 +36,16 @@ app.use(mw.CORS);
 app.use("/", userHandlers);
 app.use("/", wordListHandlers);
 
-app.get("/send-test-email", async (req, res) => {
+app.get("/send-validation-email", async (req, res) => {
+  const db = models.getMongooseConnection();
+  const email = req.body.email;
   try {
-    const result = await mail.sendTestEmail();
+    const user = models.User.findOne({ email: email });
+    if (!user) {
+      res.json("Email not registered!");
+      return;
+    }
+    const result = await mail.sendVerificationEmail(user);
     console.log("Email sent!", result);
     res.json(result);
   } catch (err) {
@@ -75,12 +82,10 @@ app.get("/validate-email", async (req, res) => {
       { _id: result._id },
       { validated: true, validation_code: null }
     ).exec();
-    res
-      .status(200)
-      .json({
-        message: "Email validated!",
-        user: { name: result.name, email: result.email }
-      });
+    res.status(200).json({
+      message: "Email validated!",
+      user: { name: result.name, email: result.email }
+    });
   }
 });
 
