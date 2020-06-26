@@ -6,6 +6,7 @@ const mailgun = require("mailgun-js")({
 
 exports.sendVerificationEmail = (user, uri) => {
   console.log("USER DATA:", user.name, user.validation_code);
+  console.log("URI:", uri);
   const data = {
     from: "WordPlay App <donot-reply@mg.wordplay.donotpanic.cc>",
     to: "zavori.laszlo@gmail.com",
