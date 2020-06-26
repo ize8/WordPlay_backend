@@ -36,7 +36,7 @@ app.use(mw.CORS);
 app.use("/", userHandlers);
 app.use("/", wordListHandlers);
 
-app.get("/send-validation-email", async (req, res) => {
+app.post("/send-validation-email", async (req, res) => {
   const db = models.getMongooseConnection();
   const email = req.body.email;
   try {
