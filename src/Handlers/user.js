@@ -32,7 +32,7 @@ router.post("/login-user", async (req, res) => {
     .createHash("md5")
     .update(password)
     .digest("hex");
-  const user = await models.User.findOne({ email: email }).exec();
+  let user = await models.User.findOne({ email: email }).exec();
   if (!user) {
     res.json({ error: "User not registered!", email: email });
     return;
@@ -41,6 +41,8 @@ router.post("/login-user", async (req, res) => {
     res.json({ error: "Wrong Password!", email: email });
     return;
   }
+  user.last_login = new Date();
+  await user.save();
   const returnUser = {
     id: user._id,
     email: user.email,

@@ -93,11 +93,13 @@ app.get("/validate-email", async (req, res) => {
  */
 app.post("/refresh-token", mw.checkToken, async (req, res) => {
   models.getMongooseConnection();
-  const user = await models.User.findOne({ _id: req.auth.id }).exec();
+  let user = await models.User.findOne({ _id: req.auth.id }).exec();
   if (!user) {
     res.json({ error: "User not registered!", user: req.auth });
     return;
   }
+  user.last_login = new Date();
+  await user.save();
   const returnUser = {
     id: user._id,
     email: user.email,
