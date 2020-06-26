@@ -1,5 +1,6 @@
 const models = require("../Database/Models.js");
 const mw = require("../Middlewares");
+const nanoid = require('nanoid');
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 var express = require("express"),
@@ -159,7 +160,7 @@ router.post("/delete-user", mw.checkToken, async (req, res) => {
  *         in: body
  *         type: string
  */
-router.post("/register-new-user", mw.checkToken, async (req, res) => {
+router.post("/register-new-user", async (req, res) => {
   const email = req.body.email;
   const name = req.body.name;
   let password = req.body.password;

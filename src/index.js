@@ -38,9 +38,9 @@ app.use("/", wordListHandlers);
 
 app.get("/send-test-email", async (req, res) => {
   try {
-    await mail.sendTestEmail();
-    console.log("Email sent!");
-    res.json("Email sent!!");
+    const result = await mail.sendTestEmail();
+    console.log("Email sent!", result);
+    res.json(result);
   } catch (err) {
     console.log("ERROR:", err);
     res.json("Sorry, some fuckup happened :(");
