@@ -1,6 +1,6 @@
 const models = require("../Database/Models.js");
 const mw = require("../Middlewares");
-const nanoid = require('nanoid');
+const nanoid = require("nanoid");
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 var express = require("express"),
