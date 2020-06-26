@@ -75,7 +75,12 @@ app.get("/validate-email", async (req, res) => {
       { _id: result._id },
       { validated: true, validation_code: null }
     ).exec();
-    res.status(200).json({ message: "Email validated!" });
+    res
+      .status(200)
+      .json({
+        message: "Email validated!",
+        user: { name: result.name, email: result.email }
+      });
   }
 });
 
