@@ -131,5 +131,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () =>
-  console.log("Gator app listening on port 3000!")
+  console.log(`WordList Server listening on port ${process.env.PORT || 3000}!`)
 );
