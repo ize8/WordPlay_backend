@@ -29,7 +29,7 @@ const specs = swaggerJsdoc(options);
 
 const app = express();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "2mb" }));
 app.use(morgan("short"));
 app.use(mw.CORS);
 
